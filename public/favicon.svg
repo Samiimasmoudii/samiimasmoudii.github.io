@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" rx="14" fill="#0B0A09" />
+  <rect x="1" y="1" width="62" height="62" rx="13" fill="none" stroke="#FFB454" stroke-opacity="0.25" />
+  <text x="32" y="34" font-family="'Space Grotesk', Arial, Helvetica, sans-serif"
+        font-weight="700" font-size="29" letter-spacing="-1.5" fill="#FFB454"
+        text-anchor="middle" dominant-baseline="central">SM</text>
+</svg>
