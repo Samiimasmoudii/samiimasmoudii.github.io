@@ -30,6 +30,15 @@ test('capture full-page desktop + mobile screenshots', async ({ browser }) => {
   }
 });
 
+test('sections reveal on scroll', async ({ page }) => {
+  await page.goto('/');
+  const heading = page.locator('#projects');
+  await heading.scrollIntoViewIfNeeded();
+  // The reveal animates opacity 0 → 1; the SectionHeading carries data-reveal.
+  const revealed = page.locator('.section-heading:has(#projects)');
+  await expect(revealed).toHaveCSS('opacity', '1');
+});
+
 test('reduced-motion loads cleanly', async ({ browser }) => {
   const ctx = await browser.newContext({ reducedMotion: 'reduce' });
   const page = await ctx.newPage();

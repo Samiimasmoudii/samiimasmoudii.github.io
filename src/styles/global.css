@@ -144,6 +144,15 @@ img {
   left: 0;
 }
 
+/* Reveal-on-scroll initial state — only when JS is active AND motion is allowed,
+   so content is never hidden for no-JS or reduced-motion users (no flash). */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal] {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

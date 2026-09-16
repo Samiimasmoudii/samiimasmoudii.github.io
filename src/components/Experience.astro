@@ -6,7 +6,8 @@ import { experience } from '../data/experience';
 <section class="section container" aria-labelledby="work">
   <SectionHeading index="02" title="Experience" id="work" />
 
-  <ol class="timeline">
+  <ol class="timeline" data-timeline>
+    <span class="timeline__progress" data-timeline-progress aria-hidden="true"></span>
     {
       experience.map((role) => (
         <li class="timeline__item" data-reveal>
@@ -40,6 +41,17 @@ import { experience } from '../data/experience';
     padding: 0;
     margin: 0;
     position: relative;
+  }
+  /* Amber progress line drawn on scroll (GSAP), over the dim item track. */
+  .timeline__progress {
+    position: absolute;
+    left: 0;
+    top: 0.35rem;
+    bottom: 3rem;
+    width: 1px;
+    background: linear-gradient(var(--accent), var(--accent-strong));
+    transform-origin: top;
+    z-index: 1;
   }
   .timeline__item {
     position: relative;
