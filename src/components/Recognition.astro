@@ -1,0 +1,52 @@
+---
+import SectionHeading from './SectionHeading.astro';
+import { recognition } from '../data/recognition';
+---
+
+<section class="section container" aria-labelledby="recognition">
+  <SectionHeading index="05" title="Recognition" id="recognition" />
+
+  <div class="awards">
+    {
+      recognition.map((award) => (
+        <article class="award" data-reveal>
+          <h3 class="award__title">{award.title}</h3>
+          <p class="award__org">{award.org}</p>
+          <p class="award__detail">{award.detail}</p>
+        </article>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .awards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.25rem;
+  }
+  .award {
+    padding: 1.6rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    border-top: 2px solid var(--accent);
+    background: linear-gradient(var(--surface), transparent);
+  }
+  .award__title {
+    font-size: 1.1rem;
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+  }
+  .award__org {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    color: var(--accent);
+    letter-spacing: 0.03em;
+    margin-bottom: 0.9rem;
+  }
+  .award__detail {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    line-height: 1.55;
+  }
+</style>

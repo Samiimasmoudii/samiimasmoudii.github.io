@@ -19,6 +19,9 @@ const REQUIRED = [
   'Facial Recognition',
   'Kafka',
   'TensorFlow',
+  'SupClay',
+  'Contact',
+  'mailto:samiimasmoudii2@gmail.com',
 ];
 
 const missing = REQUIRED.filter((s) => !html.includes(s));
