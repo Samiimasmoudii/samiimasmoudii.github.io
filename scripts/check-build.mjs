@@ -6,6 +6,9 @@ const html = readFileSync(new URL('../dist/index.html', import.meta.url), 'utf8'
 
 const REQUIRED = [
   'Sami Masmoudi',
+  'Download CV',
+  'og:title',
+  'application/ld+json',
 ];
 
 const missing = REQUIRED.filter((s) => !html.includes(s));

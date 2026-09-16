@@ -1,12 +1,15 @@
 ---
 import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import { site } from '../data/site';
 ---
 
 <Base
   title="Sami Masmoudi — Software Engineer · AI · Data Systems"
   description="Software Engineer building data platforms and AI tooling."
 >
-  <main id="main" class="container">
-    <h1>Sami Masmoudi</h1>
+  <Nav />
+  <main id="main">
+    <h1 id="top" class="container">{site.name}</h1>
   </main>
 </Base>
