@@ -128,6 +128,47 @@ img {
   box-shadow: none;
 }
 
+/* Hero name — injected via set:html in Hero.astro, so it must be styled here
+   (Astro's scoped component styles do not apply to set:html markup). */
+.hero__word {
+  display: inline-block;
+  white-space: nowrap;
+}
+.hero__space {
+  display: inline-block;
+  width: 0.38em;
+}
+.hero__letter {
+  display: inline-block;
+  animation: letter-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  animation-delay: calc(var(--i) * 0.045s + 0.1s);
+}
+@keyframes letter-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5em) rotate(4deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+/* Stack the name on narrow screens — there is no whitespace break opportunity
+   between the words by design, so force each word onto its own line. */
+@media (max-width: 600px) {
+  .hero__word {
+    display: block;
+  }
+  .hero__space {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero__letter {
+    animation: none;
+  }
+}
+
 /* Accessibility skip link */
 .skip-link {
   position: absolute;

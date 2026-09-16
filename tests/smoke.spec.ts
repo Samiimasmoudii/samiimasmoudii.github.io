@@ -24,7 +24,16 @@ test('capture full-page desktop + mobile screenshots', async ({ browser }) => {
     const ctx = await browser.newContext({ baseURL: 'http://localhost:4321', viewport });
     const page = await ctx.newPage();
     await page.goto('/');
-    await page.waitForTimeout(1500);
+    await page.waitForTimeout(1600);
+    await page.screenshot({ path: `tests/__artifacts__/${name}-top.png` });
+    // Scroll through so reveal-on-scroll fires for every section, then return.
+    const height = await page.evaluate(() => document.body.scrollHeight);
+    for (let y = 0; y < height; y += Math.round(viewport.height * 0.7)) {
+      await page.evaluate((v) => window.scrollTo(0, v), y);
+      await page.waitForTimeout(140);
+    }
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.waitForTimeout(500);
     await page.screenshot({ path: `tests/__artifacts__/full-${name}.png`, fullPage: true });
     await ctx.close();
   }
