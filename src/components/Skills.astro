@@ -1,0 +1,46 @@
+---
+import SectionHeading from './SectionHeading.astro';
+import { skills } from '../data/skills';
+---
+
+<section class="section container" aria-labelledby="skills">
+  <SectionHeading index="04" title="Skills" id="skills" />
+
+  <div class="skills">
+    {
+      skills.map((group) => (
+        <div class="skill-group" data-reveal>
+          <h3 class="skill-group__name">{group.group}</h3>
+          <ul class="chips">
+            {group.items.map((item) => (
+              <li class="chip">{item}</li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .skills {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.25rem;
+  }
+  .skill-group {
+    padding: 1.6rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .skill-group__name {
+    font-size: 0.8rem;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    margin-bottom: 1.2rem;
+    font-weight: 400;
+  }
+</style>

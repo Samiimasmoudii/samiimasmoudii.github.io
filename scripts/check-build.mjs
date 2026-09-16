@@ -15,6 +15,10 @@ const REQUIRED = [
   'Stackdrop',
   'Concordia',
   'Dynatrace',
+  'Real-Time Analytics',
+  'Facial Recognition',
+  'Kafka',
+  'TensorFlow',
 ];
 
 const missing = REQUIRED.filter((s) => !html.includes(s));
