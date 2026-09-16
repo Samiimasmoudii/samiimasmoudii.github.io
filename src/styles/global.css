@@ -68,6 +68,30 @@ img {
   color: var(--accent);
 }
 
+.section {
+  padding-block: var(--space-section);
+}
+
+/* Tech / stack chips — shared across Experience, Projects, Skills */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  list-style: none;
+  padding: 0;
+}
+.chip {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.32rem 0.66rem;
+  white-space: nowrap;
+}
+
 /* Buttons — shared across nav, hero, contact */
 .btn {
   display: inline-flex;

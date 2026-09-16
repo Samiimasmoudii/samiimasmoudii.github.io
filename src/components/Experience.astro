@@ -1,0 +1,116 @@
+---
+import SectionHeading from './SectionHeading.astro';
+import { experience } from '../data/experience';
+---
+
+<section class="section container" aria-labelledby="work">
+  <SectionHeading index="02" title="Experience" id="work" />
+
+  <ol class="timeline">
+    {
+      experience.map((role) => (
+        <li class="timeline__item" data-reveal>
+          <span class="timeline__dot" aria-hidden="true" />
+          <div class="timeline__body">
+            <div class="timeline__head">
+              <h3 class="timeline__company">{role.company}</h3>
+              <span class="timeline__period">{role.period}</span>
+            </div>
+            <p class="timeline__role">
+              {role.title} <span class="timeline__loc">· {role.location}</span>
+            </p>
+            <ul class="timeline__bullets">
+              {role.bullets.map((b) => <li>{b}</li>)}
+            </ul>
+            <ul class="chips timeline__chips">
+              {role.stack.map((s) => (
+                <li class="chip">{s}</li>
+              ))}
+            </ul>
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+</section>
+
+<style>
+  .timeline {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+  }
+  .timeline__item {
+    position: relative;
+    padding: 0 0 3rem 2.25rem;
+    border-left: 1px solid var(--border);
+  }
+  .timeline__item:last-child {
+    padding-bottom: 0;
+    border-left-color: transparent;
+  }
+  .timeline__dot {
+    position: absolute;
+    left: -5px;
+    top: 0.35rem;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 4px var(--bg), 0 0 14px 0 var(--accent);
+  }
+  .timeline__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.25rem 1rem;
+  }
+  .timeline__company {
+    font-size: var(--step-1);
+  }
+  .timeline__period {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--accent);
+    letter-spacing: 0.03em;
+  }
+  .timeline__role {
+    color: var(--text);
+    font-weight: 500;
+    margin: 0.35rem 0 1rem;
+  }
+  .timeline__loc {
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+  .timeline__bullets {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.1rem;
+    display: grid;
+    gap: 0.6rem;
+  }
+  .timeline__bullets li {
+    position: relative;
+    padding-left: 1.1rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+  }
+  .timeline__bullets li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.65em;
+    width: 6px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  @media (max-width: 620px) {
+    .timeline__period {
+      order: 3;
+    }
+  }
+</style>

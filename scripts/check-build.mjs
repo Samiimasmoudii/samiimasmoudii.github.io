@@ -11,6 +11,10 @@ const REQUIRED = [
   'application/ld+json',
   'Software Engineer · AI · Data Systems',
   'View work',
+  'About',
+  'Stackdrop',
+  'Concordia',
+  'Dynatrace',
 ];
 
 const missing = REQUIRED.filter((s) => !html.includes(s));
