@@ -1,0 +1,198 @@
+---
+import { site } from '../data/site';
+
+// Split the name into words → letters for staggered kinetic reveal.
+const words = site.name.split(' ');
+let letterIndex = 0;
+---
+
+<section class="hero" id="top">
+  <div class="hero__bg" aria-hidden="true"></div>
+  <canvas class="hero__canvas" id="hero-canvas" aria-hidden="true"></canvas>
+
+  <div class="hero__content container">
+    <p class="eyebrow hero__eyebrow">{site.title}</p>
+
+    <h1 class="hero__name" aria-label={site.name}>
+      {
+        words.map((word, w) => (
+          <span class="hero__word">
+            {word.split('').map((char) => (
+              <span
+                class="hero__letter"
+                aria-hidden="true"
+                style={`--i:${letterIndex++}`}
+              >
+                {char}
+              </span>
+            ))}
+            {w < words.length - 1 && <span class="hero__space">&nbsp;</span>}
+          </span>
+        ))
+      }
+    </h1>
+
+    <p class="hero__tagline">{site.tagline}</p>
+
+    <div class="hero__actions">
+      <a class="btn" href="#work" data-magnetic>View work</a>
+      <a class="btn btn--ghost" href={site.cvPath} download>Download CV</a>
+    </div>
+  </div>
+
+  <a class="hero__scroll" href="#about" aria-label="Scroll to about">
+    <span>Scroll</span>
+    <span class="hero__scroll-line" aria-hidden="true"></span>
+  </a>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  /* Fallback / ambience behind the canvas */
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background:
+      radial-gradient(60% 50% at 72% 38%, var(--accent-soft), transparent 70%),
+      radial-gradient(45% 40% at 20% 80%, rgba(255, 158, 27, 0.08), transparent 70%),
+      var(--bg);
+  }
+  .hero__canvas {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1.2s ease;
+  }
+  .hero__canvas.is-ready {
+    opacity: 1;
+  }
+
+  .hero__content {
+    width: min(var(--content-width), 100% - 2 * var(--gutter));
+    padding-block: 6rem 4rem;
+  }
+  .hero__eyebrow {
+    margin-bottom: 1.4rem;
+  }
+  .hero__name {
+    font-size: var(--step-4);
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+  }
+  .hero__word {
+    display: inline-block;
+    white-space: nowrap;
+  }
+  .hero__letter {
+    display: inline-block;
+    animation: letter-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+    animation-delay: calc(var(--i) * 0.045s + 0.1s);
+  }
+  .hero__space {
+    display: inline-block;
+    width: 0.25em;
+  }
+  @keyframes letter-in {
+    from {
+      opacity: 0;
+      transform: translateY(0.5em) rotate(4deg);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .hero__tagline {
+    max-width: 42ch;
+    color: var(--text-muted);
+    font-size: var(--step-1);
+    line-height: 1.4;
+    margin-bottom: 2.5rem;
+    animation: fade-up 0.9s ease 0.6s backwards;
+  }
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem;
+    animation: fade-up 0.9s ease 0.75s backwards;
+  }
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(1rem);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .hero__scroll {
+    position: absolute;
+    left: 50%;
+    bottom: 1.75rem;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .hero__scroll-line {
+    width: 1px;
+    height: 42px;
+    background: linear-gradient(var(--accent), transparent);
+    animation: scroll-pulse 2s ease-in-out infinite;
+    transform-origin: top;
+  }
+  @keyframes scroll-pulse {
+    0%,
+    100% {
+      transform: scaleY(0.4);
+      opacity: 0.4;
+    }
+    50% {
+      transform: scaleY(1);
+      opacity: 1;
+    }
+  }
+
+  @media (max-width: 759px) {
+    .hero__scroll {
+      display: none;
+    }
+    .hero__content {
+      padding-block: 7rem 5rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__letter,
+    .hero__tagline,
+    .hero__actions {
+      animation: none;
+    }
+    .hero__scroll-line {
+      animation: none;
+      opacity: 0.6;
+    }
+  }
+</style>

@@ -9,6 +9,8 @@ const REQUIRED = [
   'Download CV',
   'og:title',
   'application/ld+json',
+  'Software Engineer · AI · Data Systems',
+  'View work',
 ];
 
 const missing = REQUIRED.filter((s) => !html.includes(s));

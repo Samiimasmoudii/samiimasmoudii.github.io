@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Nav from '../components/Nav.astro';
-import { site } from '../data/site';
+import Hero from '../components/Hero.astro';
 ---
 
 <Base
@@ -10,6 +10,6 @@ import { site } from '../data/site';
 >
   <Nav />
   <main id="main">
-    <h1 id="top" class="container">{site.name}</h1>
+    <Hero />
   </main>
 </Base>
