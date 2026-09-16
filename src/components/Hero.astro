@@ -1,9 +1,22 @@
 ---
 import { site } from '../data/site';
 
-// Split the name into words → letters for staggered kinetic reveal.
-const words = site.name.split(' ');
+// Build the name as tight per-letter spans (no whitespace between them, so
+// the inline-block letters don't render gaps) for a staggered kinetic reveal.
 let letterIndex = 0;
+const nameHtml = site.name
+  .split(' ')
+  .map((word) => {
+    const letters = word
+      .split('')
+      .map(
+        (ch) =>
+          `<span class="hero__letter" aria-hidden="true" style="--i:${letterIndex++}">${ch}</span>`,
+      )
+      .join('');
+    return `<span class="hero__word">${letters}</span>`;
+  })
+  .join('<span class="hero__space" aria-hidden="true"></span>');
 ---
 
 <section class="hero" id="top">
@@ -13,24 +26,7 @@ let letterIndex = 0;
   <div class="hero__content container">
     <p class="eyebrow hero__eyebrow">{site.title}</p>
 
-    <h1 class="hero__name" aria-label={site.name}>
-      {
-        words.map((word, w) => (
-          <span class="hero__word">
-            {word.split('').map((char) => (
-              <span
-                class="hero__letter"
-                aria-hidden="true"
-                style={`--i:${letterIndex++}`}
-              >
-                {char}
-              </span>
-            ))}
-            {w < words.length - 1 && <span class="hero__space">&nbsp;</span>}
-          </span>
-        ))
-      }
-    </h1>
+    <h1 class="hero__name" aria-label={site.name} set:html={nameHtml}></h1>
 
     <p class="hero__tagline">{site.tagline}</p>
 
@@ -103,7 +99,7 @@ let letterIndex = 0;
   }
   .hero__space {
     display: inline-block;
-    width: 0.25em;
+    width: 0.38em;
   }
   @keyframes letter-in {
     from {
@@ -196,3 +192,13 @@ let letterIndex = 0;
     }
   }
 </style>
+
+<script>
+  import { initPointCloud } from '../scripts/pointcloud';
+
+  const canvas = document.getElementById('hero-canvas');
+  if (canvas instanceof HTMLCanvasElement) {
+    const cleanup = initPointCloud(canvas);
+    window.addEventListener('beforeunload', cleanup, { once: true });
+  }
+</script>

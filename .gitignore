@@ -11,6 +11,11 @@ dist/
 *.log
 npm-debug.log*
 
+# testing
+test-results/
+playwright-report/
+tests/__artifacts__/
+
 # os / editor
 .DS_Store
 .vscode/
