@@ -182,8 +182,11 @@ const nameHtml = site.name
         const cleanup = initPointCloud(canvas);
         window.addEventListener('beforeunload', cleanup, { once: true });
       });
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(start, { timeout: 2000 });
+    const ric = (window as any).requestIdleCallback as
+      | ((cb: () => void, opts?: { timeout: number }) => number)
+      | undefined;
+    if (ric) {
+      ric(start, { timeout: 2000 });
     } else {
       window.addEventListener('load', start);
     }

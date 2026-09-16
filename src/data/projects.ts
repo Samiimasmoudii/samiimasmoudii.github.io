@@ -8,12 +8,27 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    name: 'Two-Way HR Time-Off Sync',
+    period: '2026',
+    summary:
+      'A webhook-driven, event-sourced integration that keeps two HR SaaS platforms (Connecteam and HiBob) in lockstep — automating create, edit, and cancel of employee leave. Built around an idempotent, unit-tested date-range reconciliation engine with policy mapping and a full event-audit trail, replacing manual dual data-entry for the People team.',
+    tech: ['Retool Workflows', 'Webhooks', 'JavaScript', 'PostgreSQL', 'REST APIs', 'Event Sourcing'],
+  },
+  {
     name: 'Job-Cache — Job Search & Assisted Apply',
     period: '2026 — Present',
     summary:
       'A local, fully free tool that aggregates live job postings from public ATS APIs (Greenhouse, Lever, Ashby, SmartRecruiters), ranks them against your CV, and drafts tailored cover letters and CV bullets — using Claude Code in the terminal as the AI engine, with no API keys or paid services. Assisted-apply, not auto-apply.',
     tech: ['Python', 'SQLite', 'Claude Code', 'JavaScript'],
     link: 'https://github.com/Samiimasmoudii/job-cache',
+  },
+  {
+    name: 'EdTech Fraud Risk-Scoring System',
+    period: '2026',
+    summary:
+      'A daily risk-scoring engine that replaced manual, disconnected fraud review for an edtech platform — correlating signals from billing, payments, fraud-detection, and ticketing systems across ~10,000 accounts into a ranked, explainable risk list, with admin-tunable weighting and a simulation mode, on an ETL pipeline feeding analyst and admin dashboards. (Engineering write-up.)',
+    tech: ['Retool', 'ETL', 'Amazon Redshift', 'Stripe', 'Chargebee', 'SIFT'],
+    link: 'https://stackdrop.co/engineeringnotes/edtech-platform-fraud-risk-scoring-system',
   },
   {
     name: 'Big-Data Real-Time Analytics Pipeline',
