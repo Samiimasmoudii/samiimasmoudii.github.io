@@ -1,0 +1,32 @@
+:root {
+  /* Palette — warm near-black canvas, warm off-white ink, one amber accent */
+  --bg: #0b0a09;
+  --surface: #16130f;
+  --surface-2: #1e1a15;
+  --text: #f3eee6;
+  --text-muted: #a8a199;
+  --accent: #ffb454;
+  --accent-strong: #ff9e1b;
+  --accent-soft: rgba(255, 180, 84, 0.14);
+  --border: rgba(243, 238, 230, 0.1);
+  --border-strong: rgba(243, 238, 230, 0.18);
+
+  /* Type families */
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace;
+
+  /* Fluid type scale */
+  --step--1: clamp(0.83rem, 0.8rem + 0.15vw, 0.9rem);
+  --step-0: clamp(1rem, 0.95rem + 0.25vw, 1.13rem);
+  --step-1: clamp(1.35rem, 1.2rem + 0.7vw, 1.8rem);
+  --step-2: clamp(1.8rem, 1.5rem + 1.5vw, 2.8rem);
+  --step-3: clamp(2.4rem, 1.8rem + 3vw, 4.5rem);
+  --step-4: clamp(3.2rem, 2rem + 6vw, 8rem);
+
+  /* Rhythm */
+  --space-section: clamp(4rem, 3rem + 6vw, 9rem);
+  --content-width: 1100px;
+  --gutter: clamp(1.25rem, 0.5rem + 3vw, 3rem);
+  --radius: 14px;
+}
