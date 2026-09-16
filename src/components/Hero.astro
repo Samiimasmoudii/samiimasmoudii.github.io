@@ -173,11 +173,19 @@ const nameHtml = site.name
 </style>
 
 <script>
-  import { initPointCloud } from '../scripts/pointcloud';
-
+  // Lazy-load three.js (a large dependency) on idle so it never blocks first
+  // paint or interactivity. The CSS gradient fallback shows until it mounts.
   const canvas = document.getElementById('hero-canvas');
   if (canvas instanceof HTMLCanvasElement) {
-    const cleanup = initPointCloud(canvas);
-    window.addEventListener('beforeunload', cleanup, { once: true });
+    const start = () =>
+      import('../scripts/pointcloud').then(({ initPointCloud }) => {
+        const cleanup = initPointCloud(canvas);
+        window.addEventListener('beforeunload', cleanup, { once: true });
+      });
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(start, { timeout: 2000 });
+    } else {
+      window.addEventListener('load', start);
+    }
   }
 </script>

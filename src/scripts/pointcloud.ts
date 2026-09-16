@@ -1,4 +1,21 @@
-import * as THREE from 'three';
+import {
+  WebGLRenderer,
+  Scene,
+  PerspectiveCamera,
+  BufferGeometry,
+  BufferAttribute,
+  Color,
+  PointsMaterial,
+  AdditiveBlending,
+  Points,
+  Vector2,
+  Vector3,
+  Raycaster,
+  Plane,
+  CanvasTexture,
+  Clock,
+  type Texture,
+} from 'three';
 
 /**
  * Interactive point-cloud hero.
@@ -16,17 +33,17 @@ export function initPointCloud(canvas: HTMLCanvasElement): () => void {
   const COUNT = isMobile ? 1500 : 5000;
 
   // --- Renderer (guarded: bail cleanly if WebGL is unavailable) ---
-  let renderer: THREE.WebGLRenderer;
+  let renderer: WebGLRenderer;
   try {
-    renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    renderer = new WebGLRenderer({ canvas, alpha: true, antialias: true });
   } catch {
     return () => {};
   }
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
 
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(55, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
+  const scene = new Scene();
+  const camera = new PerspectiveCamera(55, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
   camera.position.set(0, 0, 8);
 
   // --- Target shapes: each is a flat [x,y,z,...] array of length COUNT*3 ---
@@ -52,39 +69,39 @@ export function initPointCloud(canvas: HTMLCanvasElement): () => void {
 
   // --- Geometry + per-vertex colors (a warm-amber subset for depth) ---
   const current = new Float32Array(scatter); // live positions we animate
-  const geometry = new THREE.BufferGeometry();
-  geometry.setAttribute('position', new THREE.BufferAttribute(current, 3));
+  const geometry = new BufferGeometry();
+  geometry.setAttribute('position', new BufferAttribute(current, 3));
 
   const colors = new Float32Array(COUNT * 3);
-  const amber = new THREE.Color('#ffb454');
-  const dim = new THREE.Color('#5a534a');
+  const amber = new Color('#ffb454');
+  const dim = new Color('#5a534a');
   for (let i = 0; i < COUNT; i++) {
     const c = Math.random() < 0.32 ? amber : dim;
     colors[i * 3] = c.r;
     colors[i * 3 + 1] = c.g;
     colors[i * 3 + 2] = c.b;
   }
-  geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  geometry.setAttribute('color', new BufferAttribute(colors, 3));
 
-  const material = new THREE.PointsMaterial({
+  const material = new PointsMaterial({
     size: isMobile ? 0.06 : 0.05,
     sizeAttenuation: true,
     map: makeSoftSprite(),
     vertexColors: true,
     transparent: true,
     depthWrite: false,
-    blending: THREE.AdditiveBlending,
+    blending: AdditiveBlending,
     opacity: 0.95,
   });
 
-  const points = new THREE.Points(geometry, material);
+  const points = new Points(geometry, material);
   scene.add(points);
 
   // --- Pointer tracking (world position on the z=0 plane) ---
-  const pointerNDC = new THREE.Vector2(-10, -10);
-  const pointerWorld = new THREE.Vector3(9999, 9999, 9999);
-  const raycaster = new THREE.Raycaster();
-  const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+  const pointerNDC = new Vector2(-10, -10);
+  const pointerWorld = new Vector3(9999, 9999, 9999);
+  const raycaster = new Raycaster();
+  const plane = new Plane(new Vector3(0, 0, 1), 0);
 
   const onPointerMove = (e: PointerEvent) => {
     const rect = canvas.getBoundingClientRect();
@@ -102,7 +119,7 @@ export function initPointCloud(canvas: HTMLCanvasElement): () => void {
   let activeTarget: Float32Array = sphere;
   let targetCycle: Float32Array[] = [sphere, scatter];
   let cycleIndex = 0;
-  const clock = new THREE.Clock();
+  const clock = new Clock();
   let nextMorphAt = 4.5;
 
   const REPEL_RADIUS = isMobile ? 1.1 : 1.6;
@@ -230,7 +247,7 @@ export function initPointCloud(canvas: HTMLCanvasElement): () => void {
 }
 
 /** A soft radial-gradient sprite so each particle reads as a glowing dot. */
-function makeSoftSprite(): THREE.Texture {
+function makeSoftSprite(): Texture {
   const size = 64;
   const c = document.createElement('canvas');
   c.width = c.height = size;
@@ -241,7 +258,7 @@ function makeSoftSprite(): THREE.Texture {
   g.addColorStop(1, 'rgba(255,255,255,0)');
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, size, size);
-  const tex = new THREE.CanvasTexture(c);
+  const tex = new CanvasTexture(c);
   tex.needsUpdate = true;
   return tex;
 }
