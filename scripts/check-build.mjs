@@ -13,6 +13,7 @@ const REQUIRED = [
   'View work',
   'About',
   'Stackdrop',
+  'reconciliation engine',
   'Concordia',
   'Dynatrace',
   'Job-Cache',
