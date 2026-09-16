@@ -8,6 +8,14 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    name: 'Job-Cache — Job Search & Assisted Apply',
+    period: '2026 — Present',
+    summary:
+      'A local, fully free tool that aggregates live job postings from public ATS APIs (Greenhouse, Lever, Ashby, SmartRecruiters), ranks them against your CV, and drafts tailored cover letters and CV bullets — using Claude Code in the terminal as the AI engine, with no API keys or paid services. Assisted-apply, not auto-apply.',
+    tech: ['Python', 'SQLite', 'Claude Code', 'JavaScript'],
+    link: 'https://github.com/Samiimasmoudii/job-cache',
+  },
+  {
     name: 'Big-Data Real-Time Analytics Pipeline',
     period: 'Feb 2025 — Apr 2025',
     summary:

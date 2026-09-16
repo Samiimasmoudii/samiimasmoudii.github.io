@@ -15,6 +15,7 @@ const REQUIRED = [
   'Stackdrop',
   'Concordia',
   'Dynatrace',
+  'Job-Cache',
   'Real-Time Analytics',
   'Facial Recognition',
   'Kafka',
