@@ -13,6 +13,8 @@ const REQUIRED = [
   'View work',
   'About',
   'Stackdrop',
+  'Wayve Technologies',
+  'Teachable, Inc.',
   'reconciliation engine',
   'Concordia',
   'Dynatrace',

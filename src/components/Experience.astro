@@ -20,9 +20,22 @@ import { experience } from '../data/experience';
             <p class="timeline__role">
               {role.title} <span class="timeline__loc">· {role.location}</span>
             </p>
-            <ul class="timeline__bullets">
-              {role.bullets.map((b) => <li>{b}</li>)}
-            </ul>
+            {role.groups?.map((g) => (
+              <div class="timeline__group">
+                <p class="timeline__client">
+                  {g.client}
+                  {g.note && <span class="timeline__client-note"> · {g.note}</span>}
+                </p>
+                <ul class="timeline__bullets">
+                  {g.bullets.map((b) => <li>{b}</li>)}
+                </ul>
+              </div>
+            ))}
+            {role.bullets && (
+              <ul class="timeline__bullets">
+                {role.bullets.map((b) => <li>{b}</li>)}
+              </ul>
+            )}
             <ul class="chips timeline__chips">
               {role.stack.map((s) => (
                 <li class="chip">{s}</li>
@@ -96,6 +109,29 @@ import { experience } from '../data/experience';
   .timeline__loc {
     color: var(--text-muted);
     font-weight: 400;
+  }
+  /* Client sub-group within a role */
+  .timeline__group {
+    margin-bottom: 1.4rem;
+  }
+  .timeline__client {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+    padding-left: 0.75rem;
+    border-left: 2px solid var(--accent);
+  }
+  .timeline__client-note {
+    color: var(--text-muted);
+    text-transform: none;
+    letter-spacing: 0.02em;
   }
   .timeline__bullets {
     list-style: none;
