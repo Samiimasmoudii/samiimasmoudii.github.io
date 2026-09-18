@@ -27,7 +27,7 @@ export const experience: Role[] = [
         client: 'Wayve Technologies',
         note: 'Autonomous-vehicle company · UK',
         bullets: [
-          "Sole engineer on the People team's HR & workforce-operations automation — the integrations and dashboards below removed ~95% of manual data entry and gave operations leadership live visibility into shift fulfillment.",
+          "Engineer on the People team's HR & workforce-operations automation — the integrations and dashboards below removed ~95% of manual data entry and gave operations leadership live visibility into shift fulfillment.",
           'Designed and shipped two HR-platform integrations as event-sourced, idempotent Retool workflows: a two-way, webhook-driven time-off sync between Connecteam and HiBob (automated create/edit/cancel with a unit-tested date-range reconciliation engine, policy mapping, and a full event-audit trail), and a multi-region daily compliance-record sync with self-healing, exactly-once processing.',
           'Built a suite of full-stack React + TypeScript operations dashboards — a shift-fulfillment view (planned-vs-actual staffing from scheduling, attendance, and leave feeds), a fleet-utilization dashboard (automated idle-time detection, classification, and end-of-shift PDF/Slack reporting), and a control-room over the syncs (real-time health, audit browsing, one-click triage, and a comments/@-mention layer) — retiring manual spreadsheets and giving non-technical operators self-serve visibility and resolution.',
         ],
