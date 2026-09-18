@@ -39,9 +39,13 @@ export const experience: Role[] = [
           'Built and shipped a daily fraud/risk-scoring platform — data ingestion, ETL pipelines, schema design, and analyst + admin UIs; unified billing, payment, and fraud-signal APIs into a Redshift-backed workflow that surfaces a ranked, explainable risk list across ~10,000 accounts for real-time and batch review.',
         ],
       },
-    ],
-    bullets: [
-      'Developed internal tools for meeting summarization and progress reporting using RAG and MCP, reducing time spent on progress monitoring across client projects.',
+      {
+        client: 'Stackdrop',
+        note: 'Internal tooling',
+        bullets: [
+          'Developed internal tools for meeting summarization and progress reporting using RAG and MCP, reducing time spent on progress monitoring across client projects.',
+        ],
+      },
     ],
     stack: ['JavaScript', 'TypeScript', 'React', 'Node.js', 'Retool', 'PostgreSQL', 'Databricks', 'Amazon Redshift', 'REST APIs', 'Webhooks', 'MCP', 'RAG', 'System Design', 'ETL'],
   },
