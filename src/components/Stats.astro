@@ -1,0 +1,58 @@
+---
+// Real, quantifiable outcomes pulled from the work in Experience — a fast
+// "so what" beat between the hero and the prose, not a new numbered section.
+const stats = [
+  { value: '~95%', label: 'less manual data entry after the HR automation shipped' },
+  { value: '10,000+', label: 'accounts scored daily by the fraud-risk engine' },
+  { value: '400', label: 'Maven projects benchmarked in the flaky-test research' },
+];
+---
+
+<section class="stats container" aria-label="Highlights">
+  <ul class="stats__list">
+    {
+      stats.map((s) => (
+        <li class="stats__item" data-reveal>
+          <span class="stats__value">{s.value}</span>
+          <span class="stats__label">{s.label}</span>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .stats {
+    padding-block: clamp(2rem, 3vw, 3.5rem);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .stats__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+  }
+  .stats__item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .stats__value {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 1.5rem + 2vw, 3rem);
+    line-height: 1;
+    font-weight: 700;
+    color: var(--accent);
+    text-shadow: 0 0 24px var(--accent-glow);
+  }
+  .stats__label {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: var(--text-muted);
+    max-width: 28ch;
+  }
+</style>

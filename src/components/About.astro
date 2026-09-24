@@ -3,40 +3,46 @@ import SectionHeading from './SectionHeading.astro';
 import { site } from '../data/site';
 ---
 
-<section class="section container" aria-labelledby="about">
-  <SectionHeading index="01" title="About" id="about" />
+<section class="section section--surface" aria-labelledby="about">
+  <div class="container">
+    <SectionHeading index="01" title="About" id="about" />
 
-  <div class="about">
-    <div class="about__text" data-reveal>
-      {site.bio.map((para) => <p>{para}</p>)}
+    <div class="about">
+      <div class="about__text" data-reveal>
+        {site.bio.map((para) => <p>{para}</p>)}
 
-      <dl class="about__langs" aria-label="Languages">
-        {
-          site.languages.map((lang) => (
-            <div class="about__lang">
-              <dt>{lang.name}</dt>
-              <dd>{lang.level}</dd>
-            </div>
-          ))
-        }
-      </dl>
+        <dl class="about__langs" aria-label="Languages">
+          {
+            site.languages.map((lang) => (
+              <div class="about__lang">
+                <dt>{lang.name}</dt>
+                <dd>{lang.level}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+
+      <figure class="about__portrait" data-reveal>
+        <img
+          src="/portrait.jpg"
+          width="900"
+          height="900"
+          loading="lazy"
+          decoding="async"
+          alt="Sami Masmoudi at his desk"
+        />
+        <span class="about__portrait-tint" aria-hidden="true"></span>
+      </figure>
     </div>
-
-    <figure class="about__portrait" data-reveal>
-      <img
-        src="/portrait.jpg"
-        width="900"
-        height="900"
-        loading="lazy"
-        decoding="async"
-        alt="Sami Masmoudi at his desk"
-      />
-      <span class="about__portrait-tint" aria-hidden="true"></span>
-    </figure>
   </div>
 </section>
 
 <style>
+  .section--surface {
+    background: var(--surface);
+    border-block: 1px solid var(--border);
+  }
   .about {
     display: grid;
     grid-template-columns: 1.4fr 1fr;

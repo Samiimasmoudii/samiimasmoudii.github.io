@@ -18,33 +18,41 @@ const dots = Array.from({ length: 90 }, () => {
 const html = `<!doctype html><html><head><meta charset="utf-8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; box-sizing: border-box; }
   html, body { width: 1200px; height: 630px; }
   .card {
     position: relative; width: 1200px; height: 630px; overflow: hidden;
-    background:
-      radial-gradient(60% 70% at 82% 20%, rgba(255,180,84,0.18), transparent 70%),
-      #0B0A09;
-    color: #F3EEE6; font-family: 'Space Grotesk', sans-serif;
+    background: #0A0908;
+    color: #ECE7DC; font-family: 'Space Mono', monospace;
     padding: 84px; display: flex; flex-direction: column; justify-content: center;
+  }
+  .scanlines {
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(to bottom, rgba(255,180,84,0.05) 0px, rgba(255,180,84,0.05) 1px, transparent 1px, transparent 3px);
+    mix-blend-mode: overlay;
   }
   .dots { position: absolute; inset: 0; }
   .eyebrow {
-    font-family: 'JetBrains Mono', monospace; color: #FFB454;
-    letter-spacing: 0.22em; text-transform: uppercase; font-size: 22px; margin-bottom: 26px;
+    color: #FFB454;
+    letter-spacing: 0.18em; text-transform: uppercase; font-size: 20px; margin-bottom: 26px;
   }
-  .name { font-weight: 700; font-size: 132px; line-height: 0.98; letter-spacing: -0.03em; }
-  .tag { margin-top: 28px; font-size: 29px; color: #A8A199; max-width: 18ch; line-height: 1.35; }
+  .eyebrow::before { content: '>_ '; }
+  .name {
+    font-weight: 700; font-size: 110px; line-height: 1; letter-spacing: -0.01em; text-transform: uppercase;
+    text-shadow: 0 0 26px rgba(255,180,84,0.5), 0 0 70px rgba(255,180,84,0.22);
+  }
+  .tag { margin-top: 28px; font-size: 24px; color: #8F887C; max-width: 22ch; line-height: 1.5; }
+  .tag::before { content: '// '; }
   .url {
     position: absolute; left: 84px; bottom: 70px;
-    font-family: 'JetBrains Mono', monospace; font-size: 22px; color: #A8A199;
+    font-size: 20px; color: #8F887C;
   }
   .mark {
     position: absolute; right: 84px; bottom: 62px;
-    width: 74px; height: 74px; border-radius: 18px; background: #FFB454; color: #1a1206;
-    display: grid; place-items: center; font-weight: 700; font-size: 34px; letter-spacing: -2px;
+    width: 74px; height: 74px; border-radius: 8px; background: #FFB454; color: #0A0908;
+    display: grid; place-items: center; font-weight: 700; font-size: 30px; letter-spacing: -1px;
   }
 </style></head>
 <body>
@@ -55,6 +63,7 @@ const html = `<!doctype html><html><head><meta charset="utf-8">
     <div class="tag">Building data platforms &amp; AI tooling.</div>
     <div class="url">samiimasmoudii.github.io</div>
     <div class="mark">SM</div>
+    <div class="scanlines"></div>
   </div>
 </body></html>`;
 

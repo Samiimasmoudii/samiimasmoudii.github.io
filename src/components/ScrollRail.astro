@@ -1,0 +1,201 @@
+---
+// A page-wide version of the amber line in Experience: one line running the
+// full scroll of the page, with a dot per section that lights up once you've
+// scrolled past it. Desktop-only — there isn't room for it once the content
+// column starts filling the viewport.
+const sections = [
+  { id: 'about', label: 'About' },
+  { id: 'work', label: 'Experience' },
+  { id: 'projects', label: 'Projects' },
+  { id: 'skills', label: 'Skills' },
+  { id: 'recognition', label: 'Recognition' },
+  { id: 'contact', label: 'Contact' },
+];
+---
+
+<nav class="rail" aria-label="Page sections">
+  <div class="rail__track" data-rail-track>
+    <span class="rail__fill" data-rail-fill aria-hidden="true"></span>
+    <ul class="rail__dots">
+      {
+        sections.map((s) => (
+          <li class="rail__item">
+            <a class="rail__dot" href={`#${s.id}`} data-rail-dot={s.id}>
+              <span class="rail__dot-mark" aria-hidden="true" />
+              <span class="rail__dot-label">{s.label}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</nav>
+
+<style>
+  .rail {
+    display: none;
+  }
+
+  @media (min-width: 1440px) {
+    .rail {
+      display: block;
+      position: fixed;
+      z-index: 50;
+      left: 3rem;
+      top: 50%;
+      transform: translateY(-50%);
+      height: min(52vh, 440px);
+    }
+    .rail__track {
+      position: relative;
+      width: 1px;
+      height: 100%;
+      background: var(--border-strong);
+    }
+    .rail__fill {
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 100%;
+      background: linear-gradient(var(--accent), var(--accent-strong));
+      transform: scaleY(0);
+      transform-origin: top;
+    }
+    .rail__dots {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      position: absolute;
+      inset: 0;
+    }
+    .rail__item {
+      position: absolute;
+      left: 0;
+    }
+    /* Only vertical centering here — no translateX. The row starts at the
+       track's x-origin and grows rightward, so the label is never pulled
+       left past the viewport edge (that was the earlier bug). */
+    .rail__dot {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      transform: translateY(-50%);
+      padding: 0.3rem 0.6rem 0.3rem 0;
+    }
+    .rail__dot-mark {
+      width: 8px;
+      height: 8px;
+      margin-left: -4px; /* centers the mark itself on the track line */
+      border-radius: 50%;
+      background: var(--bg);
+      border: 1px solid var(--border-strong);
+      box-shadow: 0 0 0 4px var(--bg);
+      transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+      flex-shrink: 0;
+    }
+    .rail__dot.is-filled .rail__dot-mark {
+      background: var(--accent);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px var(--bg), 0 0 12px 0 var(--accent);
+    }
+    .rail__dot-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      white-space: nowrap;
+      transition: color 0.2s ease;
+    }
+    .rail__dot.is-filled .rail__dot-label {
+      color: var(--text);
+    }
+    .rail__dot:hover .rail__dot-label,
+    .rail__dot:focus-visible .rail__dot-label {
+      color: var(--accent);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rail__fill,
+    .rail__dot-mark,
+    .rail__dot-label {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const track = document.querySelector<HTMLElement>('[data-rail-track]');
+  const fill = document.querySelector<HTMLElement>('[data-rail-fill]');
+  const dots = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-rail-dot]'));
+
+  if (track && fill && dots.length) {
+    const targets = dots.map((d) => document.getElementById(d.dataset.railDot ?? ''));
+
+    const layout = () => {
+      const total = document.documentElement.scrollHeight - window.innerHeight;
+      if (total <= 0) return;
+      const railHeight = track.getBoundingClientRect().height;
+      const minGap = 22; // px — keeps labels from overlapping when two sections are close together
+
+      // getBoundingClientRect (not offsetTop): several ancestors carry a CSS
+      // transform for the scroll-reveal animation, and a transformed ancestor
+      // becomes the offsetParent — offsetTop would measure from that instead
+      // of the page. getBoundingClientRect + scrollY is unaffected by that.
+      // This is the TRUE scroll fraction — kept as-is for the "filled" check.
+      const fracs = targets.map((el) => {
+        if (!el) return 0;
+        const docTop = el.getBoundingClientRect().top + window.scrollY;
+        return Math.min(1, Math.max(0, docTop / total));
+      });
+      fracs.forEach((f, i) => {
+        dots[i].dataset.frac = String(f);
+      });
+
+      // Visual position starts from the true fraction, then gets decluttered:
+      // short/adjacent sections (e.g. Recognition + Contact near the end)
+      // can land within a few px of each other and their labels would overlap.
+      const positions = fracs.map((f) => f * railHeight);
+      for (let i = 1; i < positions.length; i++) {
+        positions[i] = Math.max(positions[i], positions[i - 1] + minGap);
+      }
+      if (positions[positions.length - 1] > railHeight) {
+        for (let i = positions.length - 2; i >= 0; i--) {
+          positions[i] = Math.min(positions[i], positions[i + 1] - minGap);
+        }
+      }
+      positions.forEach((p, i) => {
+        if (targets[i]) dots[i].parentElement!.style.top = `${p}px`;
+      });
+    };
+
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const total = document.documentElement.scrollHeight - window.innerHeight;
+      const frac = total > 0 ? Math.min(1, Math.max(0, window.scrollY / total)) : 0;
+      fill.style.transform = `scaleY(${frac})`;
+      dots.forEach((dot) => {
+        const dotFrac = Number(dot.dataset.frac ?? 0);
+        dot.classList.toggle('is-filled', frac >= dotFrac - 0.001);
+      });
+    };
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    };
+
+    layout();
+    update();
+    window.addEventListener('resize', () => {
+      layout();
+      update();
+    });
+    window.addEventListener('load', () => {
+      layout();
+      update();
+    });
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+</script>
