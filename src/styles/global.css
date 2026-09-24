@@ -1,9 +1,7 @@
-@import '@fontsource/space-grotesk/400.css';
-@import '@fontsource/space-grotesk/500.css';
-@import '@fontsource/space-grotesk/700.css';
-@import '@fontsource/inter/400.css';
-@import '@fontsource/inter/500.css';
-@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/public-sans/400.css';
+@import '@fontsource/public-sans/500.css';
+@import '@fontsource/space-mono/400.css';
+@import '@fontsource/space-mono/700.css';
 @import './tokens.css';
 
 *,
@@ -27,6 +25,25 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
+}
+
+/* CRT scanlines — a fixed, static texture over the whole page. Faint enough
+   to read as "terminal glass" rather than obscure content; no animation, so
+   it costs nothing for prefers-reduced-motion and never needs an exception. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 180, 84, 0.05) 0px,
+    rgba(255, 180, 84, 0.05) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: overlay;
 }
 
 h1,
@@ -87,9 +104,13 @@ img {
   color: var(--text-muted);
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 999px;
+  border-radius: 4px;
   padding: 0.32rem 0.66rem;
   white-space: nowrap;
+}
+.chip::before {
+  content: '#';
+  opacity: 0.55;
 }
 
 /* Buttons — shared across nav, hero, contact */
@@ -98,12 +119,12 @@ img {
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.2rem;
-  border-radius: 10px;
+  border-radius: 4px;
   background: var(--accent);
-  color: #1a1206;
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: 0.95rem;
+  color: var(--bg);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.85rem;
   border: 1px solid transparent;
   cursor: pointer;
   transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, color 0.2s ease;

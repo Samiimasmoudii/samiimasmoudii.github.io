@@ -1,7 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
 import Nav from '../components/Nav.astro';
+import ScrollRail from '../components/ScrollRail.astro';
 import Hero from '../components/Hero.astro';
+import Stats from '../components/Stats.astro';
 import About from '../components/About.astro';
 import Experience from '../components/Experience.astro';
 import Projects from '../components/Projects.astro';
@@ -16,8 +18,10 @@ import Footer from '../components/Footer.astro';
   description="Software Engineer building data platforms and AI tooling."
 >
   <Nav />
+  <ScrollRail />
   <main id="main">
     <Hero />
+    <Stats />
     <About />
     <Experience />
     <Projects />

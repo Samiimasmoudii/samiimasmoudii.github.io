@@ -1,20 +1,22 @@
 :root {
-  /* Palette — warm near-black canvas, warm off-white ink, one amber accent */
-  --bg: #0b0a09;
-  --surface: #16130f;
-  --surface-2: #1e1a15;
-  --text: #f3eee6;
-  --text-muted: #a8a199;
+  /* Palette — CRT terminal, lightened: dark coffee-brown ground (not
+     near-black), phosphor-amber accent. Terminal identity, not a black hole. */
+  --bg: #241f18;
+  --surface: #302921;
+  --surface-2: #3b3327;
+  --text: #f1ece2;
+  --text-muted: #a89d8c;
   --accent: #ffb454;
   --accent-strong: #ff9e1b;
   --accent-soft: rgba(255, 180, 84, 0.14);
-  --border: rgba(243, 238, 230, 0.1);
-  --border-strong: rgba(243, 238, 230, 0.18);
+  --accent-glow: rgba(255, 180, 84, 0.55);
+  --border: rgba(236, 231, 220, 0.1);
+  --border-strong: rgba(236, 231, 220, 0.18);
 
-  /* Type families */
-  --font-display: 'Space Grotesk', system-ui, sans-serif;
-  --font-body: 'Inter', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace;
+  /* Type families — mono carries headings too; this is a terminal, not a brochure */
+  --font-display: 'Space Mono', ui-monospace, 'SFMono-Regular', monospace;
+  --font-body: 'Public Sans', system-ui, sans-serif;
+  --font-mono: 'Space Mono', ui-monospace, 'SFMono-Regular', monospace;
 
   /* Fluid type scale */
   --step--1: clamp(0.83rem, 0.8rem + 0.15vw, 0.9rem);

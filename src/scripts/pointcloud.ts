@@ -276,7 +276,7 @@ function sampleInitials(count: number): Float32Array | null {
   ctx.fillStyle = '#fff';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.font = '700 120px "Space Grotesk", system-ui, sans-serif';
+  ctx.font = '700 120px "Space Mono", ui-monospace, monospace';
   ctx.fillText('SM', w / 2, h / 2 + 4);
 
   const data = ctx.getImageData(0, 0, w, h).data;

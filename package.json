@@ -17,9 +17,8 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.4",
     "@axe-core/playwright": "^4.13.0",
-    "@fontsource/inter": "^5.1.0",
-    "@fontsource/jetbrains-mono": "^5.1.0",
-    "@fontsource/space-grotesk": "^5.1.0",
+    "@fontsource/public-sans": "^5.1.0",
+    "@fontsource/space-mono": "^5.1.0",
     "@playwright/test": "^1.63.0",
     "@types/three": "^0.186.0",
     "axe-core": "^4.13.0",
