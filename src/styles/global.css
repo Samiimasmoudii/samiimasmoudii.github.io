@@ -209,9 +209,10 @@ img {
 /* Reveal-on-scroll initial state — only when JS is active AND motion is allowed,
    so content is never hidden for no-JS or reduced-motion users (no flash). */
 @media (prefers-reduced-motion: no-preference) {
-  .js [data-reveal] {
+  /* `translate` (not `transform`) so reveals never clobber hover transforms. */
+  .js [data-reveal]:not(.is-revealed) {
     opacity: 0;
-    transform: translateY(24px);
+    translate: 0 24px;
   }
 }
 

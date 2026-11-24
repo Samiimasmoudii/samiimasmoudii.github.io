@@ -212,10 +212,34 @@ const nameHtml = site.name
     const ric = (window as any).requestIdleCallback as
       | ((cb: () => void, opts?: { timeout: number }) => number)
       | undefined;
+    // Don't fetch three.js at all until the hero is actually on screen
+    // (e.g. someone landing on /#contact never pays for it). The check runs
+    // once the page is idle, and re-confirms a beat later, because the
+    // browser's jump to an #anchor can land after the first observation.
+    const onScreen = () => {
+      const r = canvas.getBoundingClientRect();
+      return r.bottom > 0 && r.top < window.innerHeight;
+    };
+    const whenHeroVisible = () => {
+      if (typeof IntersectionObserver === 'undefined') return start();
+      let started = false;
+      const io = new IntersectionObserver((entries) => {
+        if (started || !entries.some((e) => e.isIntersecting)) return;
+        window.setTimeout(() => {
+          if (started || !onScreen()) return;
+          started = true;
+          io.disconnect();
+          start();
+        }, 300);
+      });
+      io.observe(canvas);
+    };
     if (ric) {
-      ric(start, { timeout: 2000 });
+      ric(whenHeroVisible, { timeout: 2000 });
+    } else if (document.readyState === 'complete') {
+      whenHeroVisible();
     } else {
-      window.addEventListener('load', start);
+      window.addEventListener('load', whenHeroVisible, { once: true });
     }
   }
 </script>

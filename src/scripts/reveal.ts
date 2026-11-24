@@ -1,80 +1,139 @@
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
 /**
- * Scroll-driven reveals, timeline draw-in, and magnetic CTAs.
+ * Scroll-driven reveals, timeline draw-in, and magnetic CTAs — dependency-free
+ * (previously GSAP + ScrollTrigger, ~47 KB gzipped for these three effects).
  *
  * No-flash strategy: `[data-reveal]` elements are only hidden by CSS when the
  * `.js` class is present AND the user allows motion (see global.css). So if
  * JS is disabled or reduced-motion is on, content is visible by default and
  * this function returns early.
  *
- * Reveals use IntersectionObserver (reliable for elements already in view on
- * load and across viewports) rather than ScrollTrigger, plus a visibility
- * failsafe — content must never stay hidden.
+ * Reveals animate the standalone `translate` property (not `transform`), so
+ * they never fight a component's own hover transform (e.g. the project-card
+ * lift). The final state lives in CSS via `.is-revealed`.
  */
+const EASE_OUT = 'cubic-bezier(0.22, 1, 0.36, 1)';
+
 export function initReveals(): void {
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reduced) return; // content already visible; honour the preference
 
-  const items = gsap.utils.toArray<HTMLElement>('[data-reveal]');
+  initScrollReveals();
+  initTimelineProgress();
+  initMagnetic();
+}
 
-  const show = (el: HTMLElement, animate = true) =>
-    gsap.to(el, { opacity: 1, y: 0, duration: animate ? 0.8 : 0, ease: 'power3.out' });
+function initScrollReveals(): void {
+  const items = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'));
+
+  const show = (el: HTMLElement, animate = true) => {
+    if (el.classList.contains('is-revealed')) return;
+    el.classList.add('is-revealed');
+    if (animate && typeof el.animate === 'function') {
+      el.animate(
+        [
+          { opacity: 0, translate: '0 24px' },
+          { opacity: 1, translate: '0 0' },
+        ],
+        { duration: 800, easing: EASE_OUT },
+      );
+    }
+  };
 
   if (!('IntersectionObserver' in window)) {
     items.forEach((el) => show(el, false));
-  } else {
-    const io = new IntersectionObserver(
-      (entries, obs) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            show(entry.target as HTMLElement);
-            obs.unobserve(entry.target);
-          }
-        });
-      },
-      { rootMargin: '0px 0px -8% 0px', threshold: 0.08 },
-    );
-    items.forEach((el) => io.observe(el));
-
-    // Failsafe: anything in-view but still hidden shortly after load gets shown.
-    window.setTimeout(() => {
-      items.forEach((el) => {
-        const r = el.getBoundingClientRect();
-        const inView = r.top < window.innerHeight && r.bottom > 0;
-        if (inView && getComputedStyle(el).opacity === '0') show(el, false);
-      });
-    }, 1200);
+    return;
   }
 
-  // Timeline: draw the amber progress line as the section scrolls past.
-  gsap.registerPlugin(ScrollTrigger);
+  const io = new IntersectionObserver(
+    (entries, obs) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          show(entry.target as HTMLElement);
+          obs.unobserve(entry.target);
+        }
+      });
+    },
+    { rootMargin: '0px 0px -8% 0px', threshold: 0.08 },
+  );
+  items.forEach((el) => io.observe(el));
+
+  // Failsafe: anything in view but still hidden shortly after load gets shown.
+  window.setTimeout(() => {
+    items.forEach((el) => {
+      const r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight && r.bottom > 0) show(el, false);
+    });
+  }, 1200);
+}
+
+/**
+ * Draw the amber Experience line as the section scrolls past: 0 when the
+ * timeline's top reaches 65% of the viewport, 1 when its bottom reaches 75%.
+ * The scroll listener is only attached while the timeline is near view.
+ */
+function initTimelineProgress(): void {
   const timeline = document.querySelector<HTMLElement>('[data-timeline]');
   const progress = document.querySelector<HTMLElement>('[data-timeline-progress]');
-  if (timeline && progress) {
-    gsap.fromTo(
-      progress,
-      { scaleY: 0 },
-      {
-        scaleY: 1,
-        ease: 'none',
-        scrollTrigger: { trigger: timeline, start: 'top 65%', end: 'bottom 75%', scrub: true },
-      },
-    );
-  }
+  if (!timeline || !progress) return;
 
-  // Magnetic hover for primary CTAs.
-  gsap.utils.toArray<HTMLElement>('[data-magnetic]').forEach((el) => {
-    const strength = 0.4;
+  let ticking = false;
+  const update = () => {
+    ticking = false;
+    const vh = window.innerHeight;
+    const r = timeline.getBoundingClientRect();
+    const span = r.height - 0.1 * vh;
+    const p = span > 0 ? (0.65 * vh - r.top) / span : 1;
+    progress.style.transform = `scaleY(${Math.min(1, Math.max(0, p))})`;
+  };
+  const onScroll = () => {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(update);
+    }
+  };
+
+  update();
+  if (typeof IntersectionObserver === 'undefined') {
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return;
+  }
+  new IntersectionObserver(
+    ([entry]) => {
+      if (entry.isIntersecting) {
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll);
+      } else {
+        window.removeEventListener('scroll', onScroll);
+        window.removeEventListener('resize', onScroll);
+      }
+      update(); // settle at 0 or 1 when entering/leaving
+    },
+    { rootMargin: '25% 0px' },
+  ).observe(timeline);
+}
+
+/** Magnetic hover for primary CTAs (fine pointers only). */
+function initMagnetic(): void {
+  if (!window.matchMedia('(pointer: fine)').matches) return;
+  const strength = 0.4;
+
+  document.querySelectorAll<HTMLElement>('[data-magnetic]').forEach((el) => {
+    // Keep the button's own hover transitions (colour, shadow) and add ours.
+    // Uses `translate` so it composes with any `transform` on the element.
+    const base = getComputedStyle(el).transition;
+    const withTranslate = (t: string) => (base && base !== 'none' ? `${base}, ${t}` : t);
+
     el.addEventListener('pointermove', (e) => {
       const r = el.getBoundingClientRect();
       const x = (e.clientX - (r.left + r.width / 2)) * strength;
       const y = (e.clientY - (r.top + r.height / 2)) * strength;
-      gsap.to(el, { x, y, duration: 0.4, ease: 'power3.out' });
+      el.style.transition = withTranslate(`translate 0.4s ${EASE_OUT}`);
+      el.style.translate = `${x}px ${y}px`;
     });
     el.addEventListener('pointerleave', () => {
-      gsap.to(el, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.4)' });
+      // Slight overshoot back to rest, standing in for GSAP's elastic ease.
+      el.style.transition = withTranslate('translate 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)');
+      el.style.translate = '';
     });
   });
 }

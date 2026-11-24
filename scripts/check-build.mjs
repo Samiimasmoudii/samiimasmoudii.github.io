@@ -21,7 +21,7 @@ const REQUIRED = [
   'Two-Way HR Time-Off Sync',
   'Job-Cache',
   'Fraud Risk-Scoring',
-  'fleet-utilization dashboard',
+  'shift-fulfillment',
   'Real-Time Analytics',
   'Facial Recognition',
   'Kafka',

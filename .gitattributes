@@ -1,0 +1,9 @@
+# Normalize text files to LF in the repo and working tree, regardless of OS
+# (stops Windows checkouts from showing every file as modified).
+* text=auto eol=lf
+
+*.png  binary
+*.jpg  binary
+*.pdf  binary
+*.woff binary
+*.woff2 binary

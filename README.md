@@ -1,7 +1,7 @@
 # Sami Masmoudi — Portfolio
 
 A single-page personal portfolio with an interactive 3D point-cloud hero.
-Dark, warm-amber, bold. Built with **Astro** + **three.js** + **GSAP**, deployed
+Dark, warm-amber, bold. Built with **Astro** + **three.js**, deployed
 to **GitHub Pages**.
 
 **Live:** https://samiimasmoudii.github.io
@@ -43,10 +43,12 @@ Other assets:
 
 - **Astro** static site; near-zero JS by default.
 - The point-cloud hero (`src/scripts/pointcloud.ts`, three.js) is **lazy-loaded
-  on idle**, so it never blocks first paint. Falls back to a CSS gradient when
+  on idle** once the hero is on screen, so it never blocks first paint, and it
+  pauses whenever the hero is scrolled out of view or the tab is hidden. Falls back to a CSS gradient when
   WebGL is unavailable and to a single static frame under `prefers-reduced-motion`.
-- Scroll reveals & the magnetic CTA use GSAP (`src/scripts/reveal.ts`) via
-  `IntersectionObserver`; everything degrades gracefully with motion off.
+- Scroll reveals, the timeline draw-in & the magnetic CTA are dependency-free
+  (`src/scripts/reveal.ts`, `IntersectionObserver` + Web Animations); everything
+  degrades gracefully with motion off.
 - Components in `src/components/` render from the data files above.
 
 ## Deployment

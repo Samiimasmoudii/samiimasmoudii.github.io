@@ -30,16 +30,20 @@ import {
 export function initPointCloud(canvas: HTMLCanvasElement): () => void {
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const isMobile = window.innerWidth < 768;
-  const COUNT = isMobile ? 1500 : 5000;
+  // Per-frame cost scales with particle count (CPU) and pixels drawn (GPU).
+  // These counts keep the shapes legible while staying light on laptops.
+  const COUNT = isMobile ? 1200 : 3000;
 
   // --- Renderer (guarded: bail cleanly if WebGL is unavailable) ---
   let renderer: WebGLRenderer;
   try {
-    renderer = new WebGLRenderer({ canvas, alpha: true, antialias: true });
+    // No MSAA: the particles are soft sprites, so antialiasing buys nothing
+    // visible but multiplies fill cost on a full-screen canvas.
+    renderer = new WebGLRenderer({ canvas, alpha: true, antialias: false, powerPreference: 'low-power' });
   } catch {
     return () => {};
   }
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
   renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
 
   const scene = new Scene();
@@ -205,9 +209,32 @@ export function initPointCloud(canvas: HTMLCanvasElement): () => void {
     raf = requestAnimationFrame(tick);
   };
 
+  // Only animate while the hero is on screen and the tab is visible —
+  // otherwise the loop would keep burning CPU/GPU for a canvas nobody sees.
+  let inView = true;
+  const syncLoop = () => {
+    const shouldRun = !prefersReduced && inView && !document.hidden;
+    if (shouldRun && raf === 0) {
+      clock.getDelta(); // discard the gap so the morph doesn't jump
+      raf = requestAnimationFrame(tick);
+    } else if (!shouldRun && raf !== 0) {
+      cancelAnimationFrame(raf);
+      raf = 0;
+    }
+  };
+
+  const io =
+    'IntersectionObserver' in window
+      ? new IntersectionObserver((entries) => {
+          inView = entries[entries.length - 1].isIntersecting;
+          syncLoop();
+        })
+      : null;
+  io?.observe(canvas);
+
   if (!prefersReduced) {
     setReady();
-    raf = requestAnimationFrame(tick);
+    syncLoop();
   }
 
   // --- Resize ---
@@ -221,20 +248,13 @@ export function initPointCloud(canvas: HTMLCanvasElement): () => void {
   window.addEventListener('resize', onResize);
 
   // --- Pause when tab is hidden ---
-  const onVisibility = () => {
-    if (document.hidden) {
-      cancelAnimationFrame(raf);
-      raf = 0;
-    } else if (!prefersReduced && raf === 0) {
-      clock.getDelta(); // discard the gap so the morph doesn't jump
-      raf = requestAnimationFrame(tick);
-    }
-  };
+  const onVisibility = () => syncLoop();
   document.addEventListener('visibilitychange', onVisibility);
 
   // --- Cleanup ---
   return () => {
     cancelAnimationFrame(raf);
+    io?.disconnect();
     window.removeEventListener('pointermove', onPointerMove);
     window.removeEventListener('pointerleave', onPointerLeave);
     window.removeEventListener('resize', onResize);
